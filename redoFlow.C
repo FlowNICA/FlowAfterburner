@@ -45,6 +45,7 @@ void redoFlow(std::string iName="", std::string oName="", std::string iFuncFileN
     if (i%100 == 0)
       std::cout << "Event [" << i << "/" << nev << "]" << std::endl;
 
+    oEvent->Clear();
     oEvent->SetB(iEvent->GetB());
     oEvent->SetPhi(iEvent->GetPhi());
     oEvent->SetEventNr(iEvent->GetEventNr());
@@ -56,9 +57,10 @@ void redoFlow(std::string iName="", std::string oName="", std::string iFuncFileN
     for (int ip = 0; ip < npart; ++ip){
       UParticle *iParticle = iEvent->GetParticle(ip);
       TLorentzVector iMom = iParticle->GetMomentum();
-      TLorentzVector oMom;
-      UParticle *oParticle = new UParticle(*iParticle);
-      if (iParticle->GetPdg() == 2212 || iParticle->GetPdg() == 2112){
+      TLorentzVector oMom = iMom;
+      //UParticle *oParticle = new UParticle(); //*iParticle);
+      //oParticle->Momentum( oMom );
+      /*if (iParticle->GetPdg() == 2212 || iParticle->GetPdg() == 2112){
         auto y = iMom.Rapidity();
         auto pt = iMom.Pt();
         auto b = iEvent->GetB();
@@ -101,8 +103,14 @@ void redoFlow(std::string iName="", std::string oName="", std::string iFuncFileN
           oMom.SetPxPyPzE(px, py, pz, e);
           oParticle->Momentum( oMom );
         }
-      }
-      oEvent->AddParticle(*oParticle);
+      }*/
+      // oEvent->AddParticle( iParticle->GetIndex(), iParticle->GetPdg(),
+      //                      iParticle->GetStatus(), iParticle->GetParent(),
+      //                      iParticle->GetParentDecay(), iParticle->GetMate(),
+      //                      iParticle->GetDecay(), {iParticle->GetFirstChild(), iParticle->GetLastChild()},
+      //                      iParticle->GetMomentum(), iParticle->GetPosition(), iParticle->GetWeight() );
+      oEvent->AddParticle(*iParticle);
+      // oEvent->AddParticle(*oParticle);
     }
     oTree->Fill();
   }
